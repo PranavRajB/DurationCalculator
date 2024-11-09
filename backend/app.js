@@ -6,14 +6,14 @@ const cors = require("cors");
 const apiKey = "AIzaSyDtH0Qn2QEmhrcRy8K_MZRQTNSi0KZy4UY";
 app.use(
   cors({
-    origin: "http://127.0.0.1:5173", // Replace with the URL of your frontend server
+    origin: "http://127.0.0.1:5173", 
   })
 );
 
 const extractPlaylistId = (link) => {
   let startIndex = link.indexOf("list=") + 5;
   let endIndex = link.indexOf("&", startIndex);
-  endIndex = endIndex === -1 ? link.length : endIndex; // If there is no '&', use the whole remaining string
+  endIndex = endIndex === -1 ? link.length : endIndex; 
   return link.substring(startIndex, endIndex);
 };
 async function fetchPlaylistItems(playlistId) {
@@ -27,7 +27,7 @@ async function fetchPlaylistItems(playlistId) {
         params: {
           part: "contentDetails",
           playlistId: playlistId,
-          maxResults: 50, // This is the maximum allowed by the API
+          maxResults: 50, 
           pageToken: pageToken,
           key: apiKey,
         },
@@ -55,7 +55,6 @@ async function fetchVideoDetails(videoId) {
   return response.data.items[0].contentDetails;
 }
 
-// Helper function to parse ISO 8601 duration format
 function parseDuration(duration) {
   const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
   const hours = parseInt(match[1]) || 0;
@@ -88,7 +87,7 @@ app.post("/", async (req, res) => {
     );
     const videos = await Promise.all(videoDetailsPromises);
 
-    // Calculate total duration and other statistics
+
     let totalDuration = 0;
     videos.forEach((video) => {
       const durationInSeconds = parseDuration(video.duration);
@@ -98,8 +97,7 @@ app.post("/", async (req, res) => {
     const numberOfVideos = videos.length;
     const averageDuration = totalDuration / numberOfVideos;
 
-    // Convert totalDuration to a more readable format if necessary
-    // ...
+    
     const readableTotalDuration = secondsToHMS(totalDuration);
     const readableAverageDuration = secondsToHMS(averageDuration);
 
